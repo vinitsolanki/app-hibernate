@@ -14,6 +14,8 @@ public class EmbeddingTest {
 
         HibernateUtil.create(person);
 
+        
+
         System.exit(0);
     }
 

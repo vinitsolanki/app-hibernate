@@ -21,12 +21,12 @@ public class HibernateUtil {
 
     public static Session getSession() throws HibernateException {
 
-            Configuration configuration = new Configuration().configure();
-            StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                    .applySettings(configuration.getProperties());
-            SessionFactory sessionFactory = configuration
-                    .buildSessionFactory(builder.build());
-            return sessionFactory.openSession();
+        Configuration configuration = new Configuration().configure();
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties());
+        SessionFactory sessionFactory = configuration
+                .buildSessionFactory(builder.build());
+        return sessionFactory.openSession();
         //return sessionFactory.openSession();
     }
 
@@ -34,22 +34,44 @@ public class HibernateUtil {
         sessionFactory.close();
     }
 
-    public static void create(Object... objects ){
+    public static void create(Object... objects) {
 
         Session session = getSession();
         Transaction tx = session.beginTransaction();
 
-        try{
+        try {
             for (Object object : objects) {
                 session.save(object);
             }
 
             tx.commit();
 
-        }finally {
+        } finally {
             session.close();
             shutdown();
         }
 
     }
+
+    public static Object get(Integer id, Class classObject) {
+
+        Session session = getSession();
+        Transaction tx = session.beginTransaction();
+        Object obj = null;
+        try {
+
+            obj = session.get(classObject, id);
+
+            tx.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+            shutdown();
+            return obj;
+        }
+
+    }
+
 }
